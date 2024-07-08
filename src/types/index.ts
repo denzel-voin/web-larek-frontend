@@ -7,11 +7,6 @@ export interface IProductItem {
 	price: number | null;
 }
 
-export interface IProductList {
-	total: number;
-	items: IProductItem[];
-}
-
 export interface IUser {
 	payment: string;
 	email: string;
@@ -19,4 +14,27 @@ export interface IUser {
 	address: string;
 	total: number;
 	items: string[];
+}
+
+export interface IBasket {
+	items: string[];
+	total: number;
+}
+
+export type PaymentMethod = 'cash' | 'card';
+
+export interface IOrder {
+	payment: PaymentMethod;
+	email: string;
+	phone: string;
+	address: string;
+	items: string[];
+	total: number;
+}
+
+export type OrderForm = Omit<IOrder, 'total' | 'items'>;
+
+export interface IOrderResult {
+	id: string;
+	total: number;
 }

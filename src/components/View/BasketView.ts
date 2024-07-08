@@ -1,46 +1,53 @@
-import { IEventEmitter } from '../../index';
+import { IBasket } from '../../types';
+import { cloneTemplate, createElement, ensureElement } from '../../utils/utils';
+import { View } from '../base/Component';
+import { EventEmitter } from '../base/events';
 
-interface IView {
-	render(data?: object): HTMLElement;
-}
+export class Basket extends View<IBasket> {
+	static template = ensureElement<HTMLTemplateElement>('#basket');
+	protected _list: HTMLElement;
+	protected _total: HTMLElement;
+	protected _button: HTMLElement;
 
-class BasketItemView implements IView {
+	constructor(protected events: EventEmitter) {
+		super(cloneTemplate(Basket.template), events);
 
-	protected title: HTMLSpanElement;
-	protected addButton: HTMLButtonElement;
-	protected removeButton: HTMLButtonElement;
+		this._list = ensureElement<HTMLElement>('.basket__list', this.container);
+		this._total = this.container.querySelector('.basket__price');
+		this._button = this.container.querySelector('.button');
 
-	protected id: string | null = null;
+		if (this._button) {
+			this._button.addEventListener('click', () => {
+				events.emit('order:open');
+			});
+		}
 
-	constructor(protected container: HTMLElement, protected events: IEventEmitter) {
-		this.title = container.querySelector('.basket-item__title') as HTMLSpanElement;
-		this.addButton = container.querySelector('.basket-item__add') as HTMLButtonElement;
-		this.removeButton = container.querySelector('.basket-item__remove') as HTMLButtonElement;
-
-		this.addButton.addEventListener('click', () => {
-			this.events.emit('ui:basket-add', {id: this.id});
-		});
-		this.addButton.addEventListener('click', () => {
-			this.events.emit('ui:basket-remove', {id: this.id});
-		});
+		this.items = [];
 	}
 
-	render(data: {id: string, title: string}) {
-		if (data) {
-			this.id = data.id;
-			this.title.textContent = data.title;
+	set items(items: HTMLElement[]) {
+		if (items.length) {
+			this._list.replaceChildren(...items);
+			this.setDisabled(this._button, false);
+		} else {
+			this._list.replaceChildren(
+				createElement<HTMLParagraphElement>('p', {
+					textContent: 'Корзина пуста',
+				})
+			);
+			this.setDisabled(this._button, true);
 		}
-		return this.container
 	}
-}
 
-
-class BasketView implements IView {
-	constructor(protected container: HTMLElement) {}
-	render(data: {items: HTMLElement[]}) {
-		if (data) {
-			this.container.replaceChildren(...data.items);
+	set selected(items: string[]) {
+		if (items.length) {
+			this.setDisabled(this._button, false);
+		} else {
+			this.setDisabled(this._button, true);
 		}
-		return this.container
+	}
+
+	set total(total: number) {
+		this.setText(this._total, `${total} синапсов`);
 	}
 }
