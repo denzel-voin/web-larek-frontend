@@ -1,6 +1,6 @@
-import { OrderForm } from '../../types';
-import { EventEmitter } from '../base/events';
-import { Form } from '../Model/Form';
+import { OrderForm } from '../types';
+import { EventEmitter } from './base/events';
+import { Form } from './common/Form';
 
 export class Contacts extends Form<OrderForm> {
 	constructor(container: HTMLFormElement, events: EventEmitter) {

@@ -1,5 +1,11 @@
-import { IBasket, IOrder, IProductItem, OrderForm, PaymentMethod } from '../../types';
-import { IEvents } from '../base/events';
+import {
+	IBasket,
+	IOrder,
+	IProductItem,
+	OrderForm,
+	PaymentMethod,
+} from '../types';
+import { IEvents } from './base/events';
 
 export class AppData {
 	items: IProductItem[] = [];
