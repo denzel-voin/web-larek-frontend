@@ -93,7 +93,7 @@ export class AppData {
 			errors.phone = 'Необходимо указать телефон';
 		}
 		if (!this.order.address) {
-			errors.phone = 'Необходимо указать адрес';
+			errors.address = 'Необходимо указать адрес';
 		}
 
 		this.formErrors = errors;

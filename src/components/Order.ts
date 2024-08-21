@@ -36,7 +36,7 @@ export class Order extends Form<OrderForm> {
 	}
 
 	set payment(value: PaymentMethod) {
-		this._paymentCard.classList.toggle('button_alt-active', value === 'card');
-		this._paymentCash.classList.toggle('button_alt-active', value === 'cash');
+		this.toggleClass(this._paymentCard, 'button_alt-active', value === 'card');
+		this.toggleClass(this._paymentCash, 'button_alt-active', value === 'cash');
 	}
 }

@@ -3,13 +3,13 @@ import { EventEmitter } from './components/base/events';
 import { WebLarekAPI } from './components/ApiModel';
 import { API_URL, CDN_URL } from './utils/constants';
 import { AppData } from './components/AppData';
-import { cloneTemplate, ensureElement } from './utils/utils';
+import { cloneTemplate, createElement, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
 import { Page } from './components/Page';
-import { Basket } from './components/common/BasketView';
+import { Basket } from './components/BasketView';
 import { Order } from './components/Order';
 import { Contacts } from './components/Contacts';
-import { Success } from './components/common/Success';
+import { Success } from './components/Success';
 import { IProductItem, OrderForm } from './types';
 import { Card } from './components/CardView';
 
@@ -82,12 +82,18 @@ events.on('preview:change', (item: IProductItem) => {
 events.on('basket:change', () => {
 	page.counter = appData.basket.items.length;
 
-	basket.items = appData.basket.items.map((id) => {
+	basket.items = appData.basket.items.map((id, index) => {
 		const item = appData.items.find((item) => item.id === id);
 		const card = new Card(cloneTemplate(cardBasketTemplate), {
 			onClick: () => appData.removeFromBasket(item),
 		});
-		return card.render(item);
+
+		const cardElement = card.render(item);
+		let indexElement = cardElement.querySelector('.basket__item-index');
+
+		indexElement.textContent = (index + 1).toString();
+
+		return cardElement;
 	});
 
 	basket.total = appData.basket.total;
